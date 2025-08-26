@@ -2,41 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Fleet Management Design System - Professional, data-driven interface */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Core Background & Text */
+    --background: 210 20% 98%;
+    --foreground: 215 25% 27%;
 
+    /* Card System */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 215 25% 27%;
 
+    /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 215 25% 27%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Fleet Primary - Professional Blue */
+    --primary: 215 84% 56%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 215 84% 48%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Fleet Secondary - Clean Gray */
+    --secondary: 215 16% 47%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Fleet Success - Operational Green */
+    --success: 150 80% 40%;
+    --success-foreground: 0 0% 100%;
+    --success-light: 150 60% 95%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Fleet Warning - Maintenance Yellow */
+    --warning: 45 90% 55%;
+    --warning-foreground: 215 25% 27%;
+    --warning-light: 45 90% 96%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Fleet Danger - Critical Red */
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --destructive-light: 0 75% 96%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Muted Elements */
+    --muted: 215 16% 95%;
+    --muted-foreground: 215 16% 47%;
+
+    /* Accent - Fleet Highlight */
+    --accent: 195 85% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Form Elements */
+    --border: 215 20% 88%;
+    --input: 215 20% 88%;
+    --ring: 215 84% 56%;
 
     --radius: 0.5rem;
+
+    /* Fleet Status Colors */
+    --status-online: 120 85% 45%;
+    --status-online-light: 120 85% 95%;
+    --status-maintenance: 35 85% 55%;
+    --status-maintenance-light: 35 85% 95%;
+    --status-offline: 0 65% 55%;
+    --status-offline-light: 0 65% 95%;
+
+    /* Fleet Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(215 84% 56%), hsl(195 85% 55%));
+    --gradient-success: linear-gradient(135deg, hsl(150 80% 40%), hsl(120 85% 45%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(215 20% 98%));
+
+    /* Shadows */
+    --shadow-card: 0 4px 20px -2px hsl(215 25% 27% / 0.1);
+    --shadow-hover: 0 8px 30px -4px hsl(215 25% 27% / 0.15);
 
     --sidebar-background: 0 0% 98%;
 
