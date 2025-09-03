@@ -6,6 +6,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import FleetOverview from "./pages/FleetOverview";
+import DriverManagement from "./pages/DriverManagement";
+import VehicleManagement from "./pages/VehicleManagement";
+import MaintenanceManagement from "./pages/MaintenanceManagement";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,8 +24,9 @@ const App = () => (
             <Route path="/" element={<Dashboard />} />
             <Route path="/fleet" element={<FleetOverview />} />
             <Route path="/tracking" element={<div className="text-center py-12"><h2 className="text-2xl font-bold mb-4">Live Tracking</h2><p className="text-muted-foreground">GPS tracking interface coming soon</p></div>} />
-            <Route path="/drivers" element={<div className="text-center py-12"><h2 className="text-2xl font-bold mb-4">Driver Management</h2><p className="text-muted-foreground">Driver management interface coming soon</p></div>} />
-            <Route path="/maintenance" element={<div className="text-center py-12"><h2 className="text-2xl font-bold mb-4">Maintenance</h2><p className="text-muted-foreground">Maintenance management interface coming soon</p></div>} />
+            <Route path="/drivers" element={<DriverManagement />} />
+            <Route path="/maintenance" element={<MaintenanceManagement />} />
+            <Route path="/vehicles" element={<VehicleManagement />} />
             <Route path="/analytics" element={<div className="text-center py-12"><h2 className="text-2xl font-bold mb-4">Analytics</h2><p className="text-muted-foreground">Fleet analytics interface coming soon</p></div>} />
             <Route path="/settings" element={<div className="text-center py-12"><h2 className="text-2xl font-bold mb-4">Settings</h2><p className="text-muted-foreground">Settings interface coming soon</p></div>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

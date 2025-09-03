@@ -44,19 +44,19 @@ export interface MaintenanceRecord {
 export const mockVehicles: Vehicle[] = [
   {
     id: "1",
-    vehicleNumber: "FL-001",
+    vehicleNumber: "ABD 1110",
     make: "Toyota",
     model: "Camry",
     year: 2022,
     status: "online",
     location: {
-      lat: 40.7128,
-      lng: -74.0060,
-      address: "New York, NY"
+      lat: -17.8252,
+      lng: 31.0335,
+      address: "Harare CBD, Zimbabwe"
     },
     driver: {
       id: "1",
-      name: "John Smith"
+      name: "Gideon Zimano"
     },
     fuelLevel: 85,
     mileage: 25000,
@@ -65,15 +65,15 @@ export const mockVehicles: Vehicle[] = [
   },
   {
     id: "2",
-    vehicleNumber: "FL-002",
+    vehicleNumber: "ABC 2345",
     make: "Ford",
-    model: "Transit",
+    model: "Ranger",
     year: 2021,
     status: "maintenance",
     location: {
-      lat: 40.7589,
-      lng: -73.9851,
-      address: "Manhattan, NY"
+      lat: -17.8292,
+      lng: 31.0522,
+      address: "Avondale, Harare"
     },
     fuelLevel: 45,
     mileage: 45000,
@@ -82,15 +82,15 @@ export const mockVehicles: Vehicle[] = [
   },
   {
     id: "3",
-    vehicleNumber: "FL-003",
+    vehicleNumber: "ACD 5678",
     make: "Honda",
-    model: "Civic",
+    model: "Fit",
     year: 2023,
     status: "offline",
     location: {
-      lat: 40.6782,
-      lng: -73.9442,
-      address: "Brooklyn, NY"
+      lat: -17.8145,
+      lng: 31.0067,
+      address: "Borrowdale, Harare"
     },
     fuelLevel: 20,
     mileage: 15000,
@@ -99,19 +99,19 @@ export const mockVehicles: Vehicle[] = [
   },
   {
     id: "4",
-    vehicleNumber: "FL-004",
-    make: "Chevrolet",
-    model: "Malibu",
+    vehicleNumber: "ADE 1234",
+    make: "Nissan",
+    model: "Navara",
     year: 2022,
     status: "online",
     location: {
-      lat: 40.7505,
-      lng: -73.9934,
-      address: "Times Square, NY"
+      lat: -17.8739,
+      lng: 31.0297,
+      address: "Warren Park, Harare"
     },
     driver: {
       id: "2",
-      name: "Sarah Johnson"
+      name: "Hope Chuma"
     },
     fuelLevel: 70,
     mileage: 32000,
@@ -123,28 +123,36 @@ export const mockVehicles: Vehicle[] = [
 export const mockDrivers: Driver[] = [
   {
     id: "1",
-    name: "John Smith",
-    licenseNumber: "DL123456789",
-    phone: "+1-555-0101",
-    email: "john.smith@company.com",
+    name: "Gideon Zimano",
+    licenseNumber: "ZW123456789",
+    phone: "+263-77-123-4567",
+    email: "gideon.zimano@company.co.zw",
     status: "active",
     assignedVehicle: "1"
   },
   {
-    id: "2",
-    name: "Sarah Johnson",
-    licenseNumber: "DL987654321",
-    phone: "+1-555-0102",
-    email: "sarah.johnson@company.com",
+    id: "2", 
+    name: "Hope Chuma",
+    licenseNumber: "ZW987654321",
+    phone: "+263-77-234-5678", 
+    email: "hope.chuma@company.co.zw",
     status: "active",
     assignedVehicle: "4"
   },
   {
     id: "3",
-    name: "Mike Davis",
-    licenseNumber: "DL456789123",
-    phone: "+1-555-0103",
-    email: "mike.davis@company.com",
+    name: "Tino Chandengenda", 
+    licenseNumber: "ZW456789123",
+    phone: "+263-77-345-6789",
+    email: "tino.chandengenda@company.co.zw",
+    status: "active"
+  },
+  {
+    id: "4",
+    name: "Leeroy Sibanda",
+    licenseNumber: "ZW789123456", 
+    phone: "+263-77-456-7890",
+    email: "leeroy.sibanda@company.co.zw",
     status: "inactive"
   }
 ];
@@ -178,5 +186,15 @@ export const mockMaintenanceRecords: MaintenanceRecord[] = [
     date: "2024-01-10",
     status: "overdue",
     nextDue: "2024-04-10"
+  },
+  {
+    id: "4",
+    vehicleId: "4", 
+    type: "scheduled",
+    description: "Transmission Service & Fluid Change",
+    cost: 220,
+    date: "2024-03-01",
+    status: "completed",
+    nextDue: "2024-06-01"
   }
 ];

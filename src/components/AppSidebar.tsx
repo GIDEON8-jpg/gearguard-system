@@ -26,6 +26,7 @@ const navigationItems = [
   { title: "Fleet Overview", url: "/fleet", icon: Car },
   { title: "Live Tracking", url: "/tracking", icon: MapPin },
   { title: "Drivers", url: "/drivers", icon: Users },
+  { title: "Vehicles", url: "/vehicles", icon: Car },
   { title: "Maintenance", url: "/maintenance", icon: Wrench },
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
   { title: "Settings", url: "/settings", icon: Settings },
