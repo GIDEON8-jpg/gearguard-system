@@ -3,14 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { Plus, Search, Edit, Trash2, Wrench, Calendar, DollarSign, Car } from "lucide-react";
-import { mockMaintenanceRecords, mockVehicles, MaintenanceRecord } from "@/lib/mockData";
+import { MaintenanceRecord } from "@/lib/mockData";
 import { useToast } from "@/components/ui/use-toast";
+import { useData } from "@/contexts/DataContext";
 
 interface MaintenanceFormData {
   vehicleId: string;
@@ -23,7 +24,7 @@ interface MaintenanceFormData {
 }
 
 export default function MaintenanceManagement() {
-  const [maintenanceRecords, setMaintenanceRecords] = useState<MaintenanceRecord[]>(mockMaintenanceRecords);
+  const { maintenanceRecords, vehicles, addMaintenanceRecord, updateMaintenanceRecord, deleteMaintenanceRecord } = useData();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -33,7 +34,7 @@ export default function MaintenanceManagement() {
   const form = useForm<MaintenanceFormData>();
   
   const filteredRecords = maintenanceRecords.filter(record => {
-    const vehicle = mockVehicles.find(v => v.id === record.vehicleId);
+    const vehicle = vehicles.find(v => v.id === record.vehicleId);
     const matchesSearch = vehicle?.vehicleNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
       record.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || record.status === statusFilter;
@@ -42,18 +43,14 @@ export default function MaintenanceManagement() {
 
   const onSubmit = (data: MaintenanceFormData) => {
     if (editingRecord) {
-      setMaintenanceRecords(records => records.map(record => 
-        record.id === editingRecord.id 
-          ? { ...record, ...data }
-          : record
-      ));
+      updateMaintenanceRecord(editingRecord.id, data);
       toast({ title: "Maintenance record updated successfully" });
     } else {
       const newRecord: MaintenanceRecord = {
         id: Date.now().toString(),
         ...data
       };
-      setMaintenanceRecords(records => [...records, newRecord]);
+      addMaintenanceRecord(newRecord);
       toast({ title: "Maintenance record added successfully" });
     }
     
@@ -69,7 +66,7 @@ export default function MaintenanceManagement() {
   };
 
   const handleDelete = (recordId: string) => {
-    setMaintenanceRecords(records => records.filter(record => record.id !== recordId));
+    deleteMaintenanceRecord(recordId);
     toast({ title: "Maintenance record deleted successfully", variant: "destructive" });
   };
 
@@ -124,6 +121,9 @@ export default function MaintenanceManagement() {
               <DialogTitle>
                 {editingRecord ? "Edit Maintenance Record" : "Schedule New Maintenance"}
               </DialogTitle>
+              <DialogDescription>
+                {editingRecord ? "Update maintenance record information" : "Schedule maintenance for a fleet vehicle"}
+              </DialogDescription>
             </DialogHeader>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -141,7 +141,7 @@ export default function MaintenanceManagement() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {mockVehicles.map(vehicle => (
+                          {vehicles.map(vehicle => (
                             <SelectItem key={vehicle.id} value={vehicle.id}>
                               {vehicle.vehicleNumber} - {vehicle.make} {vehicle.model}
                             </SelectItem>
@@ -340,7 +340,7 @@ export default function MaintenanceManagement() {
       {/* Maintenance Records */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredRecords.map((record) => {
-          const vehicle = mockVehicles.find(v => v.id === record.vehicleId);
+          const vehicle = vehicles.find(v => v.id === record.vehicleId);
           return (
             <Card key={record.id} className="shadow-sm hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">

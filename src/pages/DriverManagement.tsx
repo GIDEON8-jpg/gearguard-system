@@ -3,13 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { Plus, Search, Edit, Trash2, User, Phone, Mail, Car } from "lucide-react";
-import { mockDrivers, mockVehicles, Driver } from "@/lib/mockData";
+import { Driver } from "@/lib/mockData";
 import { useToast } from "@/components/ui/use-toast";
+import { useData } from "@/contexts/DataContext";
 
 interface DriverFormData {
   name: string;
@@ -21,7 +22,7 @@ interface DriverFormData {
 }
 
 export default function DriverManagement() {
-  const [drivers, setDrivers] = useState<Driver[]>(mockDrivers);
+  const { drivers, vehicles, addDriver, updateDriver, deleteDriver } = useData();
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingDriver, setEditingDriver] = useState<Driver | null>(null);
@@ -35,24 +36,20 @@ export default function DriverManagement() {
     driver.phone.includes(searchTerm)
   );
   
-  const availableVehicles = mockVehicles.filter(vehicle => 
+  const availableVehicles = vehicles.filter(vehicle => 
     !vehicle.driver || vehicle.driver.id === editingDriver?.id
   );
 
   const onSubmit = (data: DriverFormData) => {
     if (editingDriver) {
-      setDrivers(drivers.map(driver => 
-        driver.id === editingDriver.id 
-          ? { ...driver, ...data }
-          : driver
-      ));
+      updateDriver(editingDriver.id, data);
       toast({ title: "Driver updated successfully" });
     } else {
       const newDriver: Driver = {
         id: Date.now().toString(),
         ...data
       };
-      setDrivers([...drivers, newDriver]);
+      addDriver(newDriver);
       toast({ title: "Driver added successfully" });
     }
     
@@ -68,7 +65,7 @@ export default function DriverManagement() {
   };
 
   const handleDelete = (driverId: string) => {
-    setDrivers(drivers.filter(driver => driver.id !== driverId));
+    deleteDriver(driverId);
     toast({ title: "Driver deleted successfully", variant: "destructive" });
   };
 
@@ -99,12 +96,15 @@ export default function DriverManagement() {
               Add Driver
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px]">
-            <DialogHeader>
-              <DialogTitle>
-                {editingDriver ? "Edit Driver" : "Add New Driver"}
-              </DialogTitle>
-            </DialogHeader>
+            <DialogContent className="sm:max-w-[500px]">
+              <DialogHeader>
+                <DialogTitle>
+                  {editingDriver ? "Edit Driver" : "Add New Driver"}
+                </DialogTitle>
+                <DialogDescription>
+                  {editingDriver ? "Update driver information" : "Add a new driver to your fleet"}
+                </DialogDescription>
+              </DialogHeader>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField
@@ -286,10 +286,10 @@ export default function DriverManagement() {
               </div>
 
               {driver.assignedVehicle && (
-                <div className="p-2 bg-muted/50 rounded-lg">
+                 <div className="p-2 bg-muted/50 rounded-lg">
                   <p className="text-sm font-medium">Assigned Vehicle</p>
                   <p className="text-sm text-muted-foreground">
-                    {mockVehicles.find(v => v.id === driver.assignedVehicle)?.vehicleNumber || "Unknown"}
+                    {vehicles.find(v => v.id === driver.assignedVehicle)?.vehicleNumber || "Unknown"}
                   </p>
                 </div>
               )}

@@ -3,13 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { StatusBadge } from "@/components/StatusBadge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { Plus, Search, Edit, Trash2, Car, MapPin, Fuel } from "lucide-react";
-import { mockVehicles, Vehicle } from "@/lib/mockData";
+import { Vehicle } from "@/lib/mockData";
 import { useToast } from "@/components/ui/use-toast";
+import { useData } from "@/contexts/DataContext";
 
 interface VehicleFormData {
   vehicleNumber: string;
@@ -36,7 +37,7 @@ const zimbabweanLocations = [
 ];
 
 export default function VehicleManagement() {
-  const [vehicles, setVehicles] = useState<Vehicle[]>(mockVehicles);
+  const { vehicles, addVehicle, updateVehicle, deleteVehicle } = useData();
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
@@ -51,20 +52,13 @@ export default function VehicleManagement() {
 
   const onSubmit = (data: VehicleFormData) => {
     if (editingVehicle) {
-      setVehicles(vehicles.map(vehicle => 
-        vehicle.id === editingVehicle.id 
-          ? { 
-              ...vehicle, 
-              ...data,
-              location: {
-                ...vehicle.location,
-                address: data.locationAddress
-              },
-              lastMaintenance: vehicle.lastMaintenance,
-              nextMaintenance: vehicle.nextMaintenance
-            }
-          : vehicle
-      ));
+      updateVehicle(editingVehicle.id, {
+        ...data,
+        location: {
+          ...editingVehicle.location,
+          address: data.locationAddress
+        }
+      });
       toast({ title: "Vehicle updated successfully" });
     } else {
       const newVehicle: Vehicle = {
@@ -84,7 +78,7 @@ export default function VehicleManagement() {
         lastMaintenance: "2024-01-01",
         nextMaintenance: "2024-04-01"
       };
-      setVehicles([...vehicles, newVehicle]);
+      addVehicle(newVehicle);
       toast({ title: "Vehicle added successfully" });
     }
     
@@ -109,7 +103,7 @@ export default function VehicleManagement() {
   };
 
   const handleDelete = (vehicleId: string) => {
-    setVehicles(vehicles.filter(vehicle => vehicle.id !== vehicleId));
+    deleteVehicle(vehicleId);
     toast({ title: "Vehicle deleted successfully", variant: "destructive" });
   };
 
@@ -148,6 +142,9 @@ export default function VehicleManagement() {
               <DialogTitle>
                 {editingVehicle ? "Edit Vehicle" : "Add New Vehicle"}
               </DialogTitle>
+              <DialogDescription>
+                {editingVehicle ? "Update vehicle information" : "Add a new vehicle to your fleet"}
+              </DialogDescription>
             </DialogHeader>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
