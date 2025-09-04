@@ -201,14 +201,14 @@ export default function DriverManagement() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Assigned Vehicle (Optional)</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value || ""}>
+                      <Select onValueChange={(value) => field.onChange(value === "none" ? undefined : value)} value={field.value || "none"}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select vehicle" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="">No vehicle assigned</SelectItem>
+                          <SelectItem value="none">No vehicle assigned</SelectItem>
                           {availableVehicles.map(vehicle => (
                             <SelectItem key={vehicle.id} value={vehicle.id}>
                               {vehicle.vehicleNumber} - {vehicle.make} {vehicle.model}
