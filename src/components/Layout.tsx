@@ -25,7 +25,7 @@ export function Layout({ children }: LayoutProps) {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 text-sm">
                 <User className="w-4 h-4" />
-                <span className="font-medium">{user?.name}</span>
+                <span className="font-medium">{user?.user_metadata?.full_name || user?.email || 'User'}</span>
               </div>
               <Button variant="ghost" size="sm" onClick={logout}>
                 <LogOut className="w-4 h-4" />

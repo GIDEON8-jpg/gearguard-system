@@ -1,97 +1,110 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { User, Session } from '@supabase/supabase-js';
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: 'admin' | 'manager' | 'driver';
-}
-
+// Define the context type
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<boolean>;
-  signup: (name: string, email: string, password: string) => Promise<boolean>;
+  session: Session | null;
+  login: (email: string, password: string) => Promise<{ error?: string }>;
+  signup: (name: string, email: string, password: string) => Promise<{ error?: string }>;
   loginDemo: () => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
+// Create the context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+// AuthProvider component
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    // Check for existing session in localStorage
-    const storedUser = localStorage.getItem('auth-user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+      }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
-    // Mock authentication - in real app, this would call your API
-    if (email === 'admin@fleetguard.co.zw' && password === 'admin123') {
-      const adminUser: User = {
-        id: '1',
-        name: 'Tendai Mukamuri',
-        email: 'admin@fleetguard.co.zw',
-        role: 'admin'
-      };
-      setUser(adminUser);
-      localStorage.setItem('auth-user', JSON.stringify(adminUser));
-      return true;
+  const login = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    
+    if (error) {
+      return { error: error.message };
     }
-    return false;
+    
+    return {};
   };
 
-  const signup = async (name: string, email: string, password: string): Promise<boolean> => {
-    // Mock signup - in real app, this would call your API
-    const newUser: User = {
-      id: Date.now().toString(),
-      name,
+  const signup = async (name: string, email: string, password: string) => {
+    const redirectUrl = `${window.location.origin}/login`;
+    
+    const { error } = await supabase.auth.signUp({
       email,
-      role: 'manager'
-    };
-    setUser(newUser);
-    localStorage.setItem('auth-user', JSON.stringify(newUser));
-    return true;
+      password,
+      options: {
+        emailRedirectTo: redirectUrl,
+        data: {
+          full_name: name,
+        }
+      }
+    });
+    
+    if (error) {
+      return { error: error.message };
+    }
+    
+    return {};
   };
 
   const loginDemo = () => {
-    const demoUser: User = {
-      id: 'demo',
-      name: 'Demo User',
-      email: 'demo@fleetguard.co.zw',
-      role: 'admin'
-    };
-    setUser(demoUser);
-    localStorage.setItem('auth-user', JSON.stringify(demoUser));
+    // For demo purposes, we'll use a mock user
+    // In a real app, you might want to create a demo account in Supabase
+    console.log('Demo login - in a real app, this would use a demo account');
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('auth-user');
+  const logout = async () => {
+    await supabase.auth.signOut();
+  };
+
+  const value: AuthContextType = {
+    user,
+    session,
+    login,
+    signup,
+    loginDemo,
+    logout,
+    isAuthenticated: !!user,
   };
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      login,
-      signup,
-      loginDemo,
-      logout,
-      isAuthenticated: !!user
-    }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
-export function useAuth() {
+// Custom hook to use the AuthContext
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-}
+};

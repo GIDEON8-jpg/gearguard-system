@@ -38,10 +38,19 @@ export default function Signup() {
 
     setIsLoading(true);
     try {
-      const success = await signup(data.name, data.email, data.password);
-      if (success) {
-        toast({ title: "Account created", description: "Welcome to FleetGuard!" });
-        navigate('/');
+      const result = await signup(data.name, data.email, data.password);
+      if (!result.error) {
+        toast({ 
+          title: "Account created successfully!", 
+          description: "Please check your email to confirm your account, then sign in." 
+        });
+        navigate('/login');
+      } else {
+        toast({ 
+          title: "Signup failed", 
+          description: result.error, 
+          variant: "destructive" 
+        });
       }
     } catch (error) {
       toast({ 

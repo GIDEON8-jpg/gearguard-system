@@ -26,14 +26,14 @@ export default function Login() {
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     try {
-      const success = await login(data.email, data.password);
-      if (success) {
+      const result = await login(data.email, data.password);
+      if (!result.error) {
         toast({ title: "Login successful", description: "Welcome to FleetGuard!" });
         navigate('/');
       } else {
         toast({ 
           title: "Login failed", 
-          description: "Invalid email or password", 
+          description: result.error, 
           variant: "destructive" 
         });
       }
