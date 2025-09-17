@@ -3,7 +3,6 @@ import {
   MapPin, 
   Users, 
   Wrench, 
-  BarChart3, 
   Settings,
   Gauge
 } from "lucide-react";
@@ -28,7 +27,6 @@ const navigationItems = [
   { title: "Drivers", url: "/drivers", icon: Users },
   { title: "Vehicles", url: "/vehicles", icon: Car },
   { title: "Maintenance", url: "/maintenance", icon: Wrench },
-  { title: "Analytics", url: "/analytics", icon: BarChart3 },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
 

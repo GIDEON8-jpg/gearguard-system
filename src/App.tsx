@@ -39,7 +39,7 @@ function AppRoutes() {
         <Route path="/drivers" element={<DriverManagement />} />
         <Route path="/maintenance" element={<MaintenanceManagement />} />
         <Route path="/vehicles" element={<VehicleManagement />} />
-        <Route path="/analytics" element={<div className="text-center py-12"><p className="text-muted-foreground">Fleet analytics interface coming soon</p></div>} />
+        
         <Route path="/settings" element={<div className="text-center py-12"><h2 className="text-2xl font-bold mb-4">Settings</h2><p className="text-muted-foreground">Settings interface coming soon</p></div>} />
         <Route path="/login" element={<Navigate to="/" replace />} />
         <Route path="/signup" element={<Navigate to="/" replace />} />
