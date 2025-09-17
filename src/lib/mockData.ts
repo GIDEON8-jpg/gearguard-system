@@ -48,7 +48,7 @@ export const mockVehicles: Vehicle[] = [
     make: "Toyota",
     model: "Camry",
     year: 2022,
-    status: "online",
+    status: "available",
     location: {
       lat: -17.8252,
       lng: 31.0335,
@@ -86,7 +86,7 @@ export const mockVehicles: Vehicle[] = [
     make: "Honda",
     model: "Fit",
     year: 2023,
-    status: "offline",
+    status: "out-of-service",
     location: {
       lat: -17.8145,
       lng: 31.0067,
@@ -103,7 +103,7 @@ export const mockVehicles: Vehicle[] = [
     make: "Nissan",
     model: "Navara",
     year: 2022,
-    status: "online",
+    status: "in-use",
     location: {
       lat: -17.8739,
       lng: 31.0297,
@@ -127,7 +127,7 @@ export const mockDrivers: Driver[] = [
     licenseNumber: "ZW123456789",
     phone: "+263-77-123-4567",
     email: "gideon.zimano@company.co.zw",
-    status: "active",
+    status: "available",
     assignedVehicle: "1"
   },
   {
@@ -136,7 +136,7 @@ export const mockDrivers: Driver[] = [
     licenseNumber: "ZW987654321",
     phone: "+263-77-234-5678", 
     email: "hope.chuma@company.co.zw",
-    status: "active",
+    status: "busy",
     assignedVehicle: "4"
   },
   {
@@ -145,7 +145,7 @@ export const mockDrivers: Driver[] = [
     licenseNumber: "ZW456789123",
     phone: "+263-77-345-6789",
     email: "tino.chandengenda@company.co.zw",
-    status: "active"
+    status: "available"
   },
   {
     id: "4",
@@ -153,7 +153,7 @@ export const mockDrivers: Driver[] = [
     licenseNumber: "ZW789123456", 
     phone: "+263-77-456-7890",
     email: "leeroy.sibanda@company.co.zw",
-    status: "inactive"
+    status: "off-duty"
   }
 ];
 
@@ -184,7 +184,7 @@ export const mockMaintenanceRecords: MaintenanceRecord[] = [
     description: "Annual Safety Inspection",
     cost: 150,
     date: "2024-01-10",
-    status: "overdue",
+    status: "cancelled",
     nextDue: "2024-04-10"
   },
   {

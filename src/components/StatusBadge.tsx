@@ -69,7 +69,12 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
     }
   };
 
-  const config = statusConfig[status];
+  const config = statusConfig[status] || {
+    bg: "bg-muted",
+    text: "text-muted-foreground",
+    dot: "bg-muted-foreground",
+    label: status || "Unknown"
+  };
 
   return (
     <div className={cn(

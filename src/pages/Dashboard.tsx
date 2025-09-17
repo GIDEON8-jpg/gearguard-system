@@ -15,9 +15,9 @@ import {
 import { mockVehicles, mockDrivers, mockMaintenanceRecords } from "@/lib/mockData";
 
 export default function Dashboard() {
-  const activeVehicles = mockVehicles.filter(v => v.status === 'online').length;
-  const maintenanceAlerts = mockMaintenanceRecords.filter(r => r.status === 'overdue' || r.status === 'pending').length;
-  const activeDrivers = mockDrivers.filter(d => d.status === 'active').length;
+  const activeVehicles = mockVehicles.filter(v => v.status === 'available' || v.status === 'in-use').length;
+  const maintenanceAlerts = mockMaintenanceRecords.filter(r => r.status === 'cancelled' || r.status === 'pending').length;
+  const activeDrivers = mockDrivers.filter(d => d.status === 'available' || d.status === 'busy').length;
   const avgFuelLevel = Math.round(mockVehicles.reduce((acc, v) => acc + v.fuelLevel, 0) / mockVehicles.length);
 
   const recentActivity = [
