@@ -8,19 +8,21 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { Plus, Search, Edit, Trash2, Car, MapPin, Fuel } from "lucide-react";
-import { Vehicle } from "@/lib/mockData";
 import { useToast } from "@/components/ui/use-toast";
-import { useData } from "@/contexts/DataContext";
+import { useData, Vehicle } from "@/contexts/DataContext";
 
 interface VehicleFormData {
   vehicleNumber: string;
   make: string;
   model: string;
   year: number;
-  status: "online" | "maintenance" | "offline";
+  status: "available" | "in-use" | "maintenance" | "out-of-service";
   fuelLevel: number;
   mileage: number;
-  locationAddress: string;
+  location: string;
+  driver: string | null;
+  lastMaintenance: string | null;
+  nextMaintenance: string | null;
 }
 
 const zimbabweanLocations = [
@@ -52,33 +54,10 @@ export default function VehicleManagement() {
 
   const onSubmit = (data: VehicleFormData) => {
     if (editingVehicle) {
-      updateVehicle(editingVehicle.id, {
-        ...data,
-        location: {
-          ...editingVehicle.location,
-          address: data.locationAddress
-        }
-      });
+      updateVehicle(editingVehicle.id, data);
       toast({ title: "Vehicle updated successfully" });
     } else {
-      const newVehicle: Vehicle = {
-        id: Date.now().toString(),
-        vehicleNumber: data.vehicleNumber,
-        make: data.make,
-        model: data.model,
-        year: data.year,
-        status: data.status,
-        location: {
-          lat: -17.8252,
-          lng: 31.0335,
-          address: data.locationAddress
-        },
-        fuelLevel: data.fuelLevel,
-        mileage: data.mileage,
-        lastMaintenance: "2024-01-01",
-        nextMaintenance: "2024-04-01"
-      };
-      addVehicle(newVehicle);
+      addVehicle(data);
       toast({ title: "Vehicle added successfully" });
     }
     
@@ -95,9 +74,9 @@ export default function VehicleManagement() {
       model: vehicle.model,
       year: vehicle.year,
       status: vehicle.status,
-      fuelLevel: vehicle.fuelLevel,
-      mileage: vehicle.mileage,
-      locationAddress: vehicle.location.address
+      fuelLevel: vehicle.fuelLevel || 100,
+      mileage: vehicle.mileage || 0,
+      location: vehicle.location || zimbabweanLocations[0]
     });
     setIsDialogOpen(true);
   };
@@ -114,10 +93,10 @@ export default function VehicleManagement() {
       make: "",
       model: "",
       year: new Date().getFullYear(),
-      status: "offline",
+      status: "available",
       fuelLevel: 100,
       mileage: 0,
-      locationAddress: zimbabweanLocations[0]
+      location: zimbabweanLocations[0]
     });
     setIsDialogOpen(true);
   };
@@ -233,9 +212,10 @@ export default function VehicleManagement() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="online">Online</SelectItem>
-                            <SelectItem value="offline">Offline</SelectItem>
+                            <SelectItem value="available">Available</SelectItem>
+                            <SelectItem value="in-use">In Use</SelectItem>
                             <SelectItem value="maintenance">Maintenance</SelectItem>
+                            <SelectItem value="out-of-service">Out of Service</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -246,7 +226,7 @@ export default function VehicleManagement() {
                 
                 <FormField
                   control={form.control}
-                  name="locationAddress"
+                  name="location"
                   rules={{ required: "Location is required" }}
                   render={({ field }) => (
                     <FormItem>
@@ -380,7 +360,7 @@ export default function VehicleManagement() {
                 <div className="flex items-center gap-2">
                   <Car className="w-4 h-4 text-primary" />
                   <div>
-                    <p className="text-sm font-medium">{vehicle.mileage.toLocaleString()}</p>
+                    <p className="text-sm font-medium">{(vehicle.mileage || 0).toLocaleString()}</p>
                     <p className="text-xs text-muted-foreground">km</p>
                   </div>
                 </div>
@@ -390,14 +370,14 @@ export default function VehicleManagement() {
                 <MapPin className="w-4 h-4 text-success mt-0.5" />
                 <div>
                   <p className="text-sm font-medium">Current Location</p>
-                  <p className="text-xs text-muted-foreground">{vehicle.location.address}</p>
+                  <p className="text-xs text-muted-foreground">{vehicle.location || "Unknown"}</p>
                 </div>
               </div>
 
               {vehicle.driver && (
                 <div className="p-2 bg-muted/50 rounded-lg">
                   <p className="text-sm font-medium">Assigned Driver</p>
-                  <p className="text-sm text-muted-foreground">{vehicle.driver.name}</p>
+                  <p className="text-sm text-muted-foreground">{vehicle.driver}</p>
                 </div>
               )}
 

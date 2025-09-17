@@ -9,18 +9,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { Plus, Search, Edit, Trash2, Wrench, Calendar, DollarSign, Car } from "lucide-react";
-import { MaintenanceRecord } from "@/lib/mockData";
 import { useToast } from "@/components/ui/use-toast";
-import { useData } from "@/contexts/DataContext";
+import { useData, MaintenanceRecord } from "@/contexts/DataContext";
 
 interface MaintenanceFormData {
   vehicleId: string;
-  type: "scheduled" | "repair" | "inspection";
+  type: string;
   description: string;
   cost: number;
   date: string;
-  status: "completed" | "pending" | "overdue";
-  nextDue?: string;
+  status: "pending" | "in-progress" | "completed" | "cancelled";
+  nextDue: string | null;
 }
 
 export default function MaintenanceManagement() {
@@ -46,11 +45,7 @@ export default function MaintenanceManagement() {
       updateMaintenanceRecord(editingRecord.id, data);
       toast({ title: "Maintenance record updated successfully" });
     } else {
-      const newRecord: MaintenanceRecord = {
-        id: Date.now().toString(),
-        ...data
-      };
-      addMaintenanceRecord(newRecord);
+      addMaintenanceRecord(data);
       toast({ title: "Maintenance record added successfully" });
     }
     
@@ -74,7 +69,7 @@ export default function MaintenanceManagement() {
     setEditingRecord(null);
     form.reset({
       vehicleId: "",
-      type: "scheduled",
+      type: "Oil Change",
       description: "",
       cost: 0,
       date: new Date().toISOString().split('T')[0],
@@ -87,7 +82,8 @@ export default function MaintenanceManagement() {
     switch (status) {
       case "completed": return "success";
       case "pending": return "warning";
-      case "overdue": return "destructive";
+      case "in-progress": return "info";
+      case "cancelled": return "destructive";
       default: return "secondary";
     }
   };
@@ -166,9 +162,11 @@ export default function MaintenanceManagement() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="scheduled">Scheduled</SelectItem>
-                          <SelectItem value="repair">Repair</SelectItem>
-                          <SelectItem value="inspection">Inspection</SelectItem>
+                          <SelectItem value="Oil Change">Oil Change</SelectItem>
+                          <SelectItem value="Tire Replacement">Tire Replacement</SelectItem>
+                          <SelectItem value="Engine Service">Engine Service</SelectItem>
+                          <SelectItem value="Brake Service">Brake Service</SelectItem>
+                          <SelectItem value="Inspection">Inspection</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -233,8 +231,9 @@ export default function MaintenanceManagement() {
                           </FormControl>
                           <SelectContent>
                             <SelectItem value="pending">Pending</SelectItem>
+                            <SelectItem value="in-progress">In Progress</SelectItem>
                             <SelectItem value="completed">Completed</SelectItem>
-                            <SelectItem value="overdue">Overdue</SelectItem>
+                            <SelectItem value="cancelled">Cancelled</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -319,6 +318,13 @@ export default function MaintenanceManagement() {
                 Pending
               </Button>
               <Button
+                variant={statusFilter === "in-progress" ? "default" : "outline"}
+                onClick={() => setStatusFilter("in-progress")}
+                size="sm"
+              >
+                In Progress
+              </Button>
+              <Button
                 variant={statusFilter === "completed" ? "success" : "outline"}
                 onClick={() => setStatusFilter("completed")}
                 size="sm"
@@ -326,11 +332,11 @@ export default function MaintenanceManagement() {
                 Completed
               </Button>
               <Button
-                variant={statusFilter === "overdue" ? "destructive" : "outline"}
-                onClick={() => setStatusFilter("overdue")}
+                variant={statusFilter === "cancelled" ? "destructive" : "outline"}
+                onClick={() => setStatusFilter("cancelled")}
                 size="sm"
               >
-                Overdue
+                Cancelled
               </Button>
             </div>
           </div>

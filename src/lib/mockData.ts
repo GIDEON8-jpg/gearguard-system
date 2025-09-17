@@ -4,7 +4,7 @@ export interface Vehicle {
   make: string;
   model: string;
   year: number;
-  status: 'online' | 'maintenance' | 'offline';
+  status: 'available' | 'in-use' | 'maintenance' | 'out-of-service';
   location: {
     lat: number;
     lng: number;
@@ -26,18 +26,18 @@ export interface Driver {
   licenseNumber: string;
   phone: string;
   email: string;
-  status: 'active' | 'inactive';
+  status: 'available' | 'busy' | 'off-duty';
   assignedVehicle?: string;
 }
 
 export interface MaintenanceRecord {
   id: string;
   vehicleId: string;
-  type: 'scheduled' | 'repair' | 'inspection';
+  type: string;
   description: string;
   cost: number;
   date: string;
-  status: 'completed' | 'pending' | 'overdue';
+  status: 'pending' | 'in-progress' | 'completed' | 'cancelled';
   nextDue?: string;
 }
 

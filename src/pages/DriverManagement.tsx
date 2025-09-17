@@ -8,17 +8,16 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { Plus, Search, Edit, Trash2, User, Phone, Mail, Car } from "lucide-react";
-import { Driver } from "@/lib/mockData";
 import { useToast } from "@/components/ui/use-toast";
-import { useData } from "@/contexts/DataContext";
+import { useData, Driver } from "@/contexts/DataContext";
 
 interface DriverFormData {
   name: string;
   licenseNumber: string;
   phone: string;
   email: string;
-  status: "active" | "inactive";
-  assignedVehicle?: string;
+  status: "available" | "busy" | "off-duty";
+  assignedVehicle: string | null;
 }
 
 export default function DriverManagement() {
@@ -37,7 +36,7 @@ export default function DriverManagement() {
   );
   
   const availableVehicles = vehicles.filter(vehicle => 
-    !vehicle.driver || vehicle.driver.id === editingDriver?.id
+    !vehicle.driver || vehicle.driver === editingDriver?.id
   );
 
   const onSubmit = (data: DriverFormData) => {
@@ -45,11 +44,7 @@ export default function DriverManagement() {
       updateDriver(editingDriver.id, data);
       toast({ title: "Driver updated successfully" });
     } else {
-      const newDriver: Driver = {
-        id: Date.now().toString(),
-        ...data
-      };
-      addDriver(newDriver);
+      addDriver(data);
       toast({ title: "Driver added successfully" });
     }
     
@@ -76,7 +71,7 @@ export default function DriverManagement() {
       licenseNumber: "",
       phone: "",
       email: "",
-      status: "active"
+      status: "available"
     });
     setIsDialogOpen(true);
   };
@@ -186,8 +181,9 @@ export default function DriverManagement() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="active">Active</SelectItem>
-                          <SelectItem value="inactive">Inactive</SelectItem>
+                          <SelectItem value="available">Available</SelectItem>
+                          <SelectItem value="busy">Busy</SelectItem>
+                          <SelectItem value="off-duty">Off Duty</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -264,7 +260,7 @@ export default function DriverManagement() {
                   <User className="w-5 h-5" />
                   {driver.name}
                 </CardTitle>
-                <Badge variant={driver.status === "active" ? "success" : "secondary"}>
+                <Badge variant={driver.status === "available" ? "success" : driver.status === "busy" ? "warning" : "secondary"}>
                   {driver.status}
                 </Badge>
               </div>

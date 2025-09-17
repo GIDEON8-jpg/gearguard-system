@@ -1,17 +1,23 @@
 import { cn } from "@/lib/utils";
 
 interface StatusBadgeProps {
-  status: 'online' | 'maintenance' | 'offline' | 'active' | 'inactive' | 'completed' | 'pending' | 'overdue';
+  status: 'available' | 'in-use' | 'maintenance' | 'out-of-service' | 'busy' | 'off-duty' | 'pending' | 'in-progress' | 'completed' | 'cancelled';
   className?: string;
 }
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {
   const statusConfig = {
-    online: {
+    available: {
       bg: "bg-status-online-light",
       text: "text-status-online",
       dot: "bg-status-online",
-      label: "Online"
+      label: "Available"
+    },
+    'in-use': {
+      bg: "bg-warning-light",
+      text: "text-warning",
+      dot: "bg-warning",
+      label: "In Use"
     },
     maintenance: {
       bg: "bg-status-maintenance-light",
@@ -19,23 +25,23 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
       dot: "bg-status-maintenance",
       label: "Maintenance"
     },
-    offline: {
+    'out-of-service': {
       bg: "bg-status-offline-light",
       text: "text-status-offline",
       dot: "bg-status-offline",
-      label: "Offline"
+      label: "Out of Service"
     },
-    active: {
-      bg: "bg-success-light",
-      text: "text-success",
-      dot: "bg-success",
-      label: "Active"
+    busy: {
+      bg: "bg-warning-light",
+      text: "text-warning",
+      dot: "bg-warning",
+      label: "Busy"
     },
-    inactive: {
+    'off-duty': {
       bg: "bg-muted",
       text: "text-muted-foreground",
       dot: "bg-muted-foreground",
-      label: "Inactive"
+      label: "Off Duty"
     },
     completed: {
       bg: "bg-success-light",
@@ -49,11 +55,17 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
       dot: "bg-warning",
       label: "Pending"
     },
-    overdue: {
+    'in-progress': {
+      bg: "bg-primary-light",
+      text: "text-primary",
+      dot: "bg-primary",
+      label: "In Progress"
+    },
+    cancelled: {
       bg: "bg-destructive-light",
       text: "text-destructive",
       dot: "bg-destructive",
-      label: "Overdue"
+      label: "Cancelled"
     }
   };
 

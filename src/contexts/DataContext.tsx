@@ -118,7 +118,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       licenseNumber: driver.license_number,
       phone: driver.phone,
       email: driver.email,
-      status: (driver.status === 'available' || driver.status === 'busy' || driver.status === 'off-duty') 
+      status: (['available', 'busy', 'off-duty'].includes(driver.status)) 
         ? driver.status as 'available' | 'busy' | 'off-duty' 
         : 'available',
       assignedVehicle: driver.assigned_vehicle
@@ -141,7 +141,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       make: vehicle.make,
       model: vehicle.model,
       year: vehicle.year,
-      status: (vehicle.status === 'available' || vehicle.status === 'in-use' || vehicle.status === 'maintenance' || vehicle.status === 'out-of-service') 
+      status: (['available', 'in-use', 'maintenance', 'out-of-service'].includes(vehicle.status)) 
         ? vehicle.status as 'available' | 'in-use' | 'maintenance' | 'out-of-service' 
         : 'available',
       location: vehicle.location,
@@ -170,7 +170,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       description: record.description,
       cost: record.cost,
       date: record.date,
-      status: (record.status === 'pending' || record.status === 'in-progress' || record.status === 'completed' || record.status === 'cancelled') 
+      status: (['pending', 'in-progress', 'completed', 'cancelled'].includes(record.status)) 
         ? record.status as 'pending' | 'in-progress' | 'completed' | 'cancelled' 
         : 'pending',
       nextDue: record.next_due
@@ -203,7 +203,9 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       licenseNumber: data.license_number,
       phone: data.phone,
       email: data.email,
-      status: data.status,
+      status: (['available', 'busy', 'off-duty'].includes(data.status)) 
+        ? data.status as 'available' | 'busy' | 'off-duty' 
+        : 'available',
       assignedVehicle: data.assigned_vehicle
     };
     
@@ -273,7 +275,9 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       make: data.make,
       model: data.model,
       year: data.year,
-      status: data.status,
+      status: (['available', 'in-use', 'maintenance', 'out-of-service'].includes(data.status)) 
+        ? data.status as 'available' | 'in-use' | 'maintenance' | 'out-of-service' 
+        : 'available',
       location: data.location,
       driver: data.driver,
       fuelLevel: data.fuel_level,
@@ -350,7 +354,9 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       description: data.description,
       cost: data.cost,
       date: data.date,
-      status: data.status,
+      status: (['pending', 'in-progress', 'completed', 'cancelled'].includes(data.status)) 
+        ? data.status as 'pending' | 'in-progress' | 'completed' | 'cancelled' 
+        : 'pending',
       nextDue: data.next_due
     };
     
