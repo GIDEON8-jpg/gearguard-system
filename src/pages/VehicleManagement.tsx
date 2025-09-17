@@ -39,13 +39,25 @@ const zimbabweanLocations = [
 ];
 
 export default function VehicleManagement() {
-  const { vehicles, addVehicle, updateVehicle, deleteVehicle } = useData();
+  const { vehicles, addVehicle, updateVehicle, deleteVehicle, isLoading } = useData();
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
   const { toast } = useToast();
   
   const form = useForm<VehicleFormData>();
+  
+  // Show loading state while data is being fetched
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading vehicles...</p>
+        </div>
+      </div>
+    );
+  }
   
   const filteredVehicles = vehicles.filter(vehicle =>
     vehicle.vehicleNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||

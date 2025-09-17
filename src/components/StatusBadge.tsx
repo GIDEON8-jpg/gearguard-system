@@ -1,11 +1,24 @@
 import { cn } from "@/lib/utils";
 
 interface StatusBadgeProps {
-  status: 'available' | 'in-use' | 'maintenance' | 'out-of-service' | 'busy' | 'off-duty' | 'pending' | 'in-progress' | 'completed' | 'cancelled';
+  status?: string | null;
   className?: string;
 }
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {
+  // Handle null/undefined status safely
+  if (!status) {
+    return (
+      <div className={cn(
+        "inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground",
+        className
+      )}>
+        <div className="w-2 h-2 rounded-full bg-muted-foreground" />
+        Loading...
+      </div>
+    );
+  }
+  
   const statusConfig = {
     available: {
       bg: "bg-status-online-light",
@@ -67,13 +80,15 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
       dot: "bg-destructive",
       label: "Cancelled"
     }
-  };
+  } as const;
 
-  const config = statusConfig[status] || {
+  // Ensure we always have a valid config
+  const safeStatus = String(status).toLowerCase();
+  const config = statusConfig[safeStatus as keyof typeof statusConfig] || {
     bg: "bg-muted",
-    text: "text-muted-foreground",
+    text: "text-muted-foreground", 
     dot: "bg-muted-foreground",
-    label: status || "Unknown"
+    label: status
   };
 
   return (
